@@ -22,7 +22,7 @@ By the end of this session, students will be able to:
 
 ### Presenter Introduction
 
-Two days ago I joined **Empirical Security** as Principal Security Engineer. Before that, several years focused on one question: *how do we make vulnerability data actually usable?* That question is what **CVE Decaf** is about — decaffeinated CVEs. Strip the noise, keep the signal. Same amount of protection, none of the jitters that come from chasing 40,000 CVEs a year. Everything in this lecture is anchored to that same obsession: actionable data quality over raw volume.
+Several years focused on one question: *how do we make vulnerability data actually usable?* That question is what **CVE Decaf** is about — decaffeinated CVEs. Strip the noise, keep the signal. Same amount of protection, none of the jitters that come from chasing 40,000 CVEs a year. Everything in this lecture is anchored to that same obsession: actionable data quality over raw volume.
 
 The **Consensus Engine** — an open-source, single-person lab initiative to audit global vulnerability infrastructure and surface data discrepancies — comes from the same place. When centralized infrastructure becomes a bottleneck, individual practitioners with the right tooling can run independent accountability audits. We'll come back to that.
 

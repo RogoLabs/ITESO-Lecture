@@ -10,11 +10,11 @@ Total slides: ~43 | Total time: 4 hours (with break)
 ### Slide 1 — Title Slide
 - **Title:** Vulnerability Management and the AI Crossroads
 - **Subtitle:** How AI Is Reshaping What We Find, What We Fix, and How Fast We Have to Move
-- **Presenter:** Jerry Gamblin (@jgamblin) | Principal Security Engineer, Empirical Security
+- **Presenter:** Jerry Gamblin (@jgamblin) | Principal Security Engineer
 - **Date:** June 3, 2026
 - **Visual suggestion:** Abstract network/code background, single accent color
 - **Opening speaker notes:**
-  - Two days ago I joined Empirical Security. Before that, several years focused on one question: *how do we make vulnerability data actually usable?*
+  - Several years focused on one question: *how do we make vulnerability data actually usable?*
   - That question is what "CVE Decaf" is about — decaffeinated CVEs. Strip the noise, keep the signal. Same amount of caffeine (protection), none of the jitters (alert fatigue from chasing 40,000 CVEs a year).
   - Follow along, push back, and ask hard questions: [@jgamblin](https://twitter.com/jgamblin)
   - Everything we cover today is anchored to that same obsession: actionable data quality over raw volume.
