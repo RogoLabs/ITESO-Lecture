@@ -10,7 +10,7 @@ Total slides: ~43 | Total time: 4 hours (with break)
 ### Slide 1 — Title Slide
 - **Title:** Vulnerability Management and the AI Crossroads
 - **Subtitle:** How AI Is Reshaping What We Find, What We Fix, and How Fast We Have to Move
-- **Presenter:** Jerry Gamblin (@jgamblin) | Principal Security Engineer
+- **Presenter:** Jerry Gamblin (@jgamblin) | Founder, RogoLabs
 - **Date:** June 3, 2026
 - **Visual suggestion:** Abstract network/code background, single accent color
 - **Opening speaker notes:**
