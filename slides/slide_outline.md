@@ -10,8 +10,14 @@ Total slides: ~43 | Total time: 4 hours (with break)
 ### Slide 1 — Title Slide
 - **Title:** Vulnerability Management and the AI Crossroads
 - **Subtitle:** How AI Is Reshaping What We Find, What We Fix, and How Fast We Have to Move
-- **Presenter name + date**
+- **Presenter:** Jerry Gamblin (@jgamblin) | Principal Security Engineer, Empirical Security
+- **Date:** June 3, 2026
 - **Visual suggestion:** Abstract network/code background, single accent color
+- **Opening speaker notes:**
+  - Two days ago I joined Empirical Security. Before that, several years focused on one question: *how do we make vulnerability data actually usable?*
+  - That question is what "CVE Decaf" is about — decaffeinated CVEs. Strip the noise, keep the signal. Same amount of caffeine (protection), none of the jitters (alert fatigue from chasing 40,000 CVEs a year).
+  - Follow along, push back, and ask hard questions: [@jgamblin](https://twitter.com/jgamblin)
+  - Everything we cover today is anchored to that same obsession: actionable data quality over raw volume.
 
 ### Slide 2 — Learning Objectives
 - **Header:** By the End of Today You Will Be Able To…
@@ -88,6 +94,11 @@ Total slides: ~43 | Total time: 4 hours (with break)
   - Root cause: insufficient human staffing at a single critical infrastructure node
 - **Key insight:** The disclosure ecosystem is bottlenecked by human organizations with limited capacity — AI makes this more exposed, not less
 - **Source:** NIST NVD announcement, May 2024
+- **Counterpoint — The Consensus Engine (callout box):**
+  - One response to brittle centralized infrastructure is grassroots data-quality auditing
+  - The **Consensus Engine** is an open-source, single-person initiative that continuously cross-checks the global vulnerability infrastructure — comparing CVE feeds, NVD enrichment status, EPSS scores, and KEV entries for gaps and discrepancies
+  - Cost: $0. Stack: one developer's tooling
+  - **Teaching point:** When a government agency is the single point of failure for global security data, individual practitioners with the right tooling can run independent audits. This is not a replacement — it is accountability. AI discovery volume makes this kind of independent data-quality work more important, not less.
 
 ### Slide 10 — The Tools Driving the Surge
 - **Header:** Real AI-Assisted Vulnerability Research (Documented)
@@ -261,6 +272,21 @@ Total slides: ~43 | Total time: 4 hours (with break)
   - Emergency patches for legacy ERP systems can take 6–18 months to validate
   - This is not a temporary limitation — it is structural to how enterprise software works
 - **Key point:** AI-accelerated MTTR is real for greenfield, in-house, cloud-native code. For the rest — which is most of an enterprise — the old timeline applies.
+- **Mini-case study — "Patch in 4 hours, deployed in 47 days" (callout box):**
+  - *Setting:* Mid-size regulated bank. Java web portal using a vulnerable Apache Commons component. CVE published Monday morning, EPSS 0.58, KEV-listed within 48 hours.
+  - *Day 0 (4 hrs):* GitHub Copilot Autofix drafts a patch, PR opened. Developer approves after review. Technically correct.
+  - *Day 1–2:* AppSec review finds the fix requires a transitive dependency upgrade incompatible with an internal audit-logging library on Java 8. Technical hold.
+  - *Day 4:* Java 8→11 compatibility work done. New PR opened.
+  - *Day 5:* CAB submission. Next meeting: Thursday. Standard notice period: 5 days.
+  - *Day 8:* CAB approval — full regression suite required; deploy Saturday maintenance window only.
+  - *Day 15:* Regression environment is shared; Monday-morning slot only. Test run starts.
+  - *Day 18:* Two test failures — unrelated to patch; require sign-off from two application owners.
+  - *Day 24:* Sign-offs collected. Saturday deploy approved.
+  - *Day 26:* Patch deployed to staging.
+  - *Day 33:* Mandatory 5-business-day staging soak (regulatory requirement) completes.
+  - *Day 40:* Deployed to production.
+  - *Day 47:* Verification complete. Ticket closed.
+  - **AI solved the 4-hour problem. The organization solved the 43-day problem. These are different problems.**
 
 ### Slide 28 — The Exploit Side of the Race
 - **Header:** AI-Accelerated Exploit Development
@@ -289,6 +315,14 @@ Total slides: ~43 | Total time: 4 hours (with break)
   - Contractual liability — patching vendor software without their approval can void support contracts
   - Human accountability — someone must sign off, own the decision, and own any resulting outage
 - **Point:** AI solves the technical drafting problem. Leadership must solve the process, vendor, and regulatory problems.
+- **Mini-case mapping (speaker note / discussion anchor):** Return to the Slide 27 case and map each delay to this list:
+  - 5-day CAB notice → *change approval board*
+  - Monday-only regression environment → *regression testing requirements (resource-constrained)*
+  - Java 8/11 incompatibility → *vendor/dependency coupling*
+  - 5-day staging soak → *regulatory freeze/soak requirement*
+  - Application owner sign-offs → *human accountability*
+  - Each item was a real control with a real reason — none was bureaucratic waste
+  - **Discussion prompt:** "Which of these controls would you eliminate? Which would you keep if it was your name on the change record?"
 
 ### Slide 31 — Section Takeaway
 - **Header:** The MTTR Race Is Already Underway
@@ -357,6 +391,11 @@ Total slides: ~43 | Total time: 4 hours (with break)
 
 - **Bottom line:** Add static analysis to your CI/CD pipeline today. Require human review on auth, data access, and external input handling. Be honest that this attack surface does not yet have a complete answer.
 - **Data ref:** `code/04_ephemeral_software.ipynb` — live bandit scan of real vulnerability patterns
+- **Where this is heading (forward-looking bullets — research directions for students):**
+  - **eBPF runtime enforcement** — Cilium Tetragon and similar tools are moving beyond alerting toward active policy enforcement: blocking unexpected syscalls and file-access patterns at the kernel level *before* they complete. This could catch AI-generated code behaving anomalously even before any CVE exists. Current limitation: requires Linux kernel ≥ 5.8, deep expertise, and works cleanly only in cloud-native environments.
+  - **AI-agent code reviewers** — Dedicated AI agents trained to review AI-generated code for security anti-patterns are in early commercial development (Snyk DeepCode AI, CodeAnt AI, Semgrep AI). The open research question: can AI reliably detect its own failure modes at a false-negative rate low enough to be useful? Early results are mixed.
+  - **AI-provenance tagging** — Some organizations are beginning to annotate git commits and build artifacts with AI-generation metadata, enabling downstream policy gates ("no AI-authored code in payment flow without AppSec sign-off"). No standard yet; watch for SLSA or SBOM extensions to pick this up.
+  - *Caveat for students:* None of these are production-ready universal answers. eBPF enforcement at scale requires expertise most enterprises don't have. AI reviewers have their own blind spots. The security engineering research agenda for 2025–2030 is substantially about closing this gap — which means this is where careers get built.
 
 ### Slide 38 — Discussion Pause
 - **Header:** Scenario Question

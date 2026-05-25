@@ -20,6 +20,14 @@ By the end of this session, students will be able to:
 
 ## 09:00 AM – 09:45 AM | Introduction: From Automation to Autonomous AI
 
+### Presenter Introduction
+
+Two days ago I joined **Empirical Security** as Principal Security Engineer. Before that, several years focused on one question: *how do we make vulnerability data actually usable?* That question is what **CVE Decaf** is about — decaffeinated CVEs. Strip the noise, keep the signal. Same amount of protection, none of the jitters that come from chasing 40,000 CVEs a year. Everything in this lecture is anchored to that same obsession: actionable data quality over raw volume.
+
+The **Consensus Engine** — an open-source, single-person lab initiative to audit global vulnerability infrastructure and surface data discrepancies — comes from the same place. When centralized infrastructure becomes a bottleneck, individual practitioners with the right tooling can run independent accountability audits. We'll come back to that.
+
+Follow along, push back, ask hard questions: [@jgamblin](https://twitter.com/jgamblin)
+
 ### Context Setting: Comparing Traditional Security Automation with AI-Driven Processes
 
 Traditional vulnerability management has always relied on automation — scanners, SIEM rules, patch orchestration pipelines. The shift happening now is not one of degree but of kind: automation that follows rules is being replaced by agents that generate rules, write patches, and triage findings independently.
@@ -49,6 +57,9 @@ The category of AI-assisted vulnerability research is real and growing. Examples
 Real-world structural signal:
 - NVD published approximately 28,900 CVEs in 2023 and approximately 40,000 CVE IDs were assigned in 2024 — a ~38% single-year jump. This is partly driven by CNA expansion and partly by increased AI-assisted research activity.
 - Critically, 2024 also brought a major structural disruption: **NIST announced in May 2024 that it was suspending enrichment of most new CVEs in the NVD** due to resource and funding constraints, creating a backlog of tens of thousands of unanalyzed entries. This is directly relevant to the lecture's thesis: the discovery and cataloging infrastructure depends on human organizations with limited capacity.
+
+**The Consensus Engine — grassroots accountability for global vulnerability infrastructure:**
+One response to this brittleness is independent data-quality auditing. The **Consensus Engine** is an open-source, single-person initiative that continuously cross-checks the global vulnerability infrastructure: comparing CVE feed assignments against NVD enrichment status, EPSS score coverage, KEV catalog entries, and publication timing for gaps and inconsistencies. Cost: $0. Stack: one developer's tooling. Purpose: demonstrate that data quality at global scale can be independently audited by motivated practitioners — not only by government agencies. When the NVD backlog crisis made tens of thousands of CVEs invisible to downstream scanners, projects like this provided visibility that official infrastructure did not. **Teaching point for students:** AI is dramatically increasing discovery volume. The infrastructure for cataloging, enriching, and operationalizing that volume is fragile and human-staffed. Individual practitioners who build accountability tooling counterbalance that fragility in a way that enterprise SIEMs and compliance frameworks cannot.
 
 Visualization: See `code/01_cve_volume_trends.py` for a chart of annual CVE disclosures 2015–2026.
 
@@ -142,6 +153,30 @@ MTTR has historically been measured in weeks to months. Industry benchmark repor
 
 Visualization: See `code/03_mttr_race.py` for a timeline chart modeling the pre-AI and post-AI scenarios.
 
+**Mini-case study — "Patch in 4 hours, deployed in 47 days":**
+This is not a horror story. Every delay below was a real control with a real reason. Walk students through it as a map of the organizational terrain they will actually work in.
+
+*Setting:* Mid-size regulated bank (~2,000 employees). Java web portal using a vulnerable Apache Commons component. CVE published Monday morning, EPSS 0.58, added to CISA KEV within 48 hours of publication.
+
+- **Day 0, 4 hours:** GitHub Copilot Autofix identifies the vulnerable call site, drafts a patch, opens a PR. The developer reviews and approves. The patch is technically correct.
+- **Day 1–2:** Application security team reviews the PR. Discovers the fix requires upgrading a transitive dependency that is incompatible with an internal audit-logging library locked to Java 8. Technical hold placed.
+- **Day 4:** Java 8→11 compatibility work completed by a different team. New PR opened and approved.
+- **Day 5:** CAB (Change Advisory Board) submission. Next CAB meeting is Thursday. Standard notice period: 5 business days. Cannot expedite without a P1 incident declaration (which requires active exploitation evidence in *this* environment).
+- **Day 8:** CAB approves — with conditions: full regression test suite required; production deploy must occur during Saturday night maintenance window only.
+- **Day 15:** Shared regression environment is booked Monday mornings only. Test run begins.
+- **Day 18:** Two test failures. Unrelated to the patch itself, but bank policy requires acknowledgment and sign-off from the two application owners whose services regressed.
+- **Day 24:** Both sign-offs collected after scheduling and calendar delays.
+- **Day 26:** Patch deployed to staging (Saturday window).
+- **Day 33:** Mandatory 5-business-day staging soak period completes (regulatory requirement for changes affecting the core banking tier).
+- **Day 40:** Deployed to production (Saturday window).
+- **Day 47:** Verification complete, ITSM ticket closed.
+
+**AI solved the 4-hour problem. The organization solved the 43-day problem. These are different problems.**
+
+Mapping to the constraint categories: CAB notice period → *change approval boards*; Monday-only regression environment → *resource-constrained testing infrastructure*; Java 8/11 incompatibility → *vendor/dependency coupling*; 5-day staging soak → *regulatory requirement*; application owner sign-offs → *human accountability chain*.
+
+None of these delays are unique to this bank. Every enterprise in a regulated industry has equivalents. The students sitting in this room will encounter all of them within their first two years in the workforce.
+
 **Discussion question:** What organizational constraints (approval chains, change management, vendor-dependent systems, regulatory freeze periods) would prevent your organization from deploying a patch 4 hours after it was written?
 
 ---
@@ -189,6 +224,18 @@ eBPF-based tools (Falco, Cilium Tetragon) can flag anomalous behavior in product
 Hard to enforce and the boundary is rarely clear.
 
 The practical takeaway for students: **Add static analysis to your CI/CD pipeline, require human review on security-sensitive AI-generated code, and be honest with your organization that this attack surface does not yet have a complete tooling answer.**
+
+**Where this is heading — research directions and forward-looking signals:**
+
+The tooling gap is real today. The following are active research and early-deployment directions worth following — and worth building careers on:
+
+- **eBPF runtime enforcement (beyond monitoring):** Tools like Cilium Tetragon are moving from alerting toward active policy enforcement — blocking unexpected syscalls, file-access patterns, and network connections at the Linux kernel level *before* they complete. Unlike signature-based detection, eBPF enforcement requires no prior knowledge of what a vulnerability looks like; it enforces what *should* happen. This could catch AI-generated code behaving anomalously even when no CVE exists for it. Current hard limit: requires Linux kernel ≥ 5.8, significant operational expertise, and works cleanly only in cloud-native Kubernetes environments. Heterogeneous enterprise estates present a much harder deployment problem.
+
+- **AI-agent code reviewers:** Dedicated AI agents trained specifically to review AI-generated code for security anti-patterns are in early commercial development. Snyk DeepCode AI, CodeAnt AI, and Semgrep's AI features all address parts of this problem. The open research question: *can AI reliably detect its own failure modes?* Early results show these tools catch some vulnerability classes (injection patterns, weak crypto) at useful rates, but logic-level authorization flaws and race conditions remain hard. The false-negative rate at which these tools miss real vulnerabilities is not yet publicly characterized for real-world corpora.
+
+- **AI-provenance tagging in build pipelines:** Some organizations are beginning to annotate git commits, pull request metadata, and SBOM entries with AI-generation provenance — enabling downstream policy gates ("no AI-authored code touching the payment authorization flow without AppSec sign-off"). No standard exists yet; watch for SLSA (Supply-chain Levels for Software Artifacts) or SBOM extensions to pick this up in 2025–2026.
+
+*Honest framing for students:* None of these are universal production-ready answers. eBPF enforcement at enterprise scale requires expertise and infrastructure most organizations don't have. AI code reviewers have their own blind spots and are evaluated on largely synthetic benchmarks. The security engineering research agenda for 2025–2030 is substantially about closing this gap. That means it is a genuinely open field — which is where early-career researchers can do work that matters.
 
 Visualization: See `code/04_ephemeral_software.ipynb` for a live bandit scan of vulnerable AI-generated code patterns.
 
