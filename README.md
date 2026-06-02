@@ -11,6 +11,7 @@
 |------|----------|
 | [`outline.md`](outline.md) | Full lecture outline with speaker notes |
 | [`slides/slide_outline.md`](slides/slide_outline.md) | Full slide-by-slide content outline (43 slides + appendix) |
+| [`slides/speaker_notes.md`](slides/speaker_notes.md) | Presenter talking points for all 53 slides — transitions, anticipated Q&A, and accuracy guardrails |
 | [`code/`](code/) | Python data-visualization demos for each section |
 
 ## Running the Notebooks
