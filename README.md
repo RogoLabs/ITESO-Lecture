@@ -22,14 +22,14 @@ pip install -r requirements.txt
 jupyter lab          # then open any .ipynb file
 ```
 
-On first run, notebooks that query live APIs will fetch and cache data to `code/output/`. Subsequent runs load from cache and are instant. Set `NVD_API_KEY` in the first cell of notebooks 1–3 for faster NVD queries (free key at nvd.nist.gov/developers/request-an-api-key).
+On first run, notebooks that query live APIs will fetch and cache data to `code/output/`. Subsequent runs load from cache and are instant. **Without a key, NVD throttles to ~5 requests / 30s, so notebooks 1–3 are slow on a cold start.** Setting `NVD_API_KEY` in the first cell of notebooks 1–3 cuts this by ~10× (free key at nvd.nist.gov/developers/request-an-api-key).
 
-| Notebook | Live APIs | Est. first-run time (no key) |
-|----------|-----------|-------------------------------|
-| `01_cve_discovery_analysis.ipynb` | NVD | ~60s |
-| `02_exploitability_overlay.ipynb` | CISA KEV, EPSS, NVD | ~5–10 min |
-| `03_exploitation_timeline.ipynb` | CISA KEV, NVD | ~5–10 min |
-| `04_ephemeral_software.ipynb` | EPSS | ~5s |
+| Notebook | Live APIs | First run (no key) | First run (with `NVD_API_KEY`) |
+|----------|-----------|--------------------|--------------------------------|
+| `01_cve_discovery_analysis.ipynb` | NVD | ~4–5 min | ~30s |
+| `02_exploitability_overlay.ipynb` | CISA KEV, EPSS, NVD | ~20–25 min | ~2–3 min |
+| `03_exploitation_timeline.ipynb` | CISA KEV, NVD | ~25–30 min | ~3–4 min |
+| `04_ephemeral_software.ipynb` | EPSS | ~5s | ~5s |
 
 All outputs (charts + JSON) are saved to `code/output/`.
 

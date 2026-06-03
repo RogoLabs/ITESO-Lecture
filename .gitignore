@@ -1,0 +1,15 @@
+# Notebook live-API cache (fetched + regenerated on run)
+code/output/
+
+# Claude Code / agent session artifacts
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
